@@ -1,0 +1,83 @@
+Subject: Response to Guideline 4.2.2 Review - Guides for GTA 6 (Version 1.1.0)
+Submission ID: 231c9ba5-060e-4b76-94b7-9f8792381cc5
+
+Dear Apple Review Team,
+
+Thank you for your feedback regarding our initial submission. We have thoroughly reviewed Guideline 4.2.2 (Minimum Functionality) and have substantially overhauled the application to provide a rich, interactive, and native tactical companion experience that goes far beyond static content or web browsing.
+
+Below is an overview of the major native interactive features, tactical tools, simulators, and user experience enhancements introduced in Version 1.1.0:
+
+===================================================================
+1. NATIVE INTERACTIVE TACTICAL UTILITIES & SIMULATORS (Tools Tab)
+===================================================================
+We have developed a suite of fully interactive native tools and calculators built specifically for GTA 6 players:
+
+• Heist Payout & Crew Split Calculator:
+  - An interactive financial simulation tool allowing players to adjust heist score amounts ($250,000 to $20,000,000) using dynamic sliders.
+  - Choose between tactical approaches (e.g., Smart Hacker, Aggressive Assault, Stealth Breach).
+  - Customize cut percentages for each crew member (Lucia, Jason, Hacker, Driver, Gunman, Fencing fee) with real-time recalculation of net takes.
+
+• Vehicle Garage & Side-by-Side Comparator:
+  - An interactive vehicle benchmarking utility allowing players to select any two vehicles from the database and compare their real-time performance telemetry.
+  - Live animated comparison bars for Top Speed, 0-60 Acceleration, Braking, Handling, Armor, and In-Game Price.
+
+• Weapon Arsenal & Ballistics TTK Simulator:
+  - An interactive ballistics calculator that computes Shots-To-Kill and Time-To-Kill (TTK) across variable engagement ranges (5m to 100m) and body target zones (Head, Torso, Limbs).
+  - Inspect fire rates, magazine capacities, and attachment setups.
+
+• 100% Leonida Completion Tracker:
+  - An interactive multi-category completion checklist covering Story Missions, Strangers & Freaks, Hobbies, Random Encounters, and Collectibles.
+  - Live progress indicators, radial progress rings, and automatic local data persistence.
+
+• Vice City Lore Trivia & Quiz Game:
+  - A timed interactive trivia mini-game testing game lore and mechanics.
+  - Features real-time scoring, tactile haptic feedback, detailed answer explanations, and local high-score tracking.
+
+===================================================================
+2. INTERACTIVE WALKTHROUGH GUIDES WITH PROGRESS CHECKLISTS (Guides Tab)
+===================================================================
+• Interactive Step-by-Step Checklists:
+  - Guides now include actionable checklists that players can check off in real-time as they complete objectives during gameplay.
+  - Visual progress bars update automatically per guide and across overall progress.
+
+• In-App Player Notes Scratchpad:
+  - Every guide features a dedicated personal notes editor allowing players to record custom strategies, loadouts, and heist plans, stored locally via UserDefaults.
+
+• Native Categorization & Bookmarks:
+  - Multi-category filters (Missions & Heists, Money & Business, Collectibles, Weapons, Secrets) and a 1-tap bookmarking system.
+
+===================================================================
+3. VISUAL CHEAT VAULT WITH NATIVE CONTROLLER BUTTONS (Cheats Tab)
+===================================================================
+• Dual Platform Controller Visualizer:
+  - Renders authentic PlayStation 5 (DualSense) and Xbox Series X|S controller button sequences using dedicated image assets (△, ○, ✕, □, bumpers, triggers, D-pad directionals).
+  - Supports PC key commands and in-game phone number dials.
+
+• 1-Tap Copy with Haptic Feedback:
+  - Instant clipboard copying powered by native iOS UIImpactFeedbackGenerator and UINotificationFeedbackGenerator for tactile confirmation.
+
+• Detailed Cheat Breakdown:
+  - Dedicated detail view with warning notices regarding achievement/trophy disabling, usage tips, and effect summaries.
+
+===================================================================
+4. INTERACTIVE MAP OF LEONIDA (Map Tab)
+===================================================================
+• Custom pan-and-zoom map with over 30 categorized points of interest (Safehouses, Ammu-Nation, Mod Shops, Stunt Jumps, Hidden Collectibles, Secrets).
+• Instant search and category filter pills.
+• Interactive location cards with GPS coordinates, descriptions, reward details, and completion toggles.
+
+===================================================================
+5. NATIVE IPADOS & IPHONE USER EXPERIENCE
+===================================================================
+• Optimized for iPad Air 11-inch (M3), iPad Pro, and all iPhone display sizes using adaptive grids and native navigation stacks.
+• Fully functional 100% offline with zero login or account creation required.
+• High-polish dark synthwave design with ambient neon lighting and smooth transitions.
+
+===================================================================
+
+We believe these extensive native capabilities, tactical calculators, interactive checklists, trivia game, and controller tools provide lasting value and an engaging native iOS experience.
+
+Thank you for your time and continued guidance. Please let us know if you need any additional information to complete the review.
+
+Sincerely,
+The Development Team
