@@ -3,9 +3,14 @@ import SwiftUI
 extension Color {
     static let neonPink = Color(hex: "FF2E63")
     static let sunsetOrange = Color(hex: "FF6B6B")
-    static let deepPurple = Color(hex: "4A0E69")
-    static let slateGray = Color(hex: "707070")
-    static let viceBackground = Color(hex: "0F0F1A")
+    static let viceCyan = Color(hex: "00F0FF")
+    static let viceGold = Color(hex: "FFBE0B")
+    static let viceGreen = Color(hex: "00E676")
+    static let deepPurple = Color(hex: "340744")
+    static let slateGray = Color(hex: "8A8A9E")
+    static let viceBackground = Color(hex: "0A0A14")
+    static let darkCard = Color(hex: "141426")
+    static let cardBorder = Color(hex: "2D2D4A")
 }
 
 extension Color {
@@ -32,5 +37,20 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+}
+
+// Custom Haptic Feedback helper
+struct Haptics {
+    static func playImpact(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.prepare()
+        generator.impactOccurred()
+    }
+    
+    static func playNotification(_ type: UINotificationFeedbackGenerator.FeedbackType = .success) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.prepare()
+        generator.notificationOccurred(type)
     }
 }

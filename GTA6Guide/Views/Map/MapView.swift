@@ -20,15 +20,16 @@ struct MapView: View {
                     Image("map")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 1000, height: 1000)
+                        .frame(width: 1200, height: 1200)
                     
-                    // Pins
-                    ForEach(viewModel.mapPins) { pin in
-                        PinView(pin: pin)
-                            .position(x: pin.coordinate.x * 1000, y: pin.coordinate.y * 1000)
+                    // Filtered Map Pins
+                    ForEach(viewModel.filteredMapPins) { pin in
+                        PinMarkerView(pin: pin, isSelected: selectedPin?.id == pin.id)
+                            .position(x: pin.coordinate.x * 1200, y: pin.coordinate.y * 1200)
                             .onTapGesture {
-                                withAnimation {
+                                withAnimation(.spring()) {
                                     selectedPin = pin
+                                    Haptics.playImpact(.light)
                                 }
                             }
                     }
@@ -38,8 +39,10 @@ struct MapView: View {
                 .gesture(
                     DragGesture()
                         .onChanged { value in
-                            offset = CGSize(width: lastOffset.width + value.translation.width,
-                                          height: lastOffset.height + value.translation.height)
+                            offset = CGSize(
+                                width: lastOffset.width + value.translation.width,
+                                height: lastOffset.height + value.translation.height
+                            )
                         }
                         .onEnded { _ in
                             lastOffset = offset
@@ -48,7 +51,7 @@ struct MapView: View {
                 .gesture(
                     MagnificationGesture()
                         .onChanged { value in
-                            scale = lastScale * value
+                            scale = max(0.6, min(3.0, lastScale * value))
                         }
                         .onEnded { _ in
                             lastScale = scale
@@ -56,33 +59,95 @@ struct MapView: View {
                 )
             }
             
-            // Selection Card
-            if let pin = selectedPin {
-                VStack {
-                    Spacer()
-                    PinDetailCard(pin: pin, isSelected: $selectedPin)
-                        .transition(.move(edge: .bottom))
-                        .padding()
+            // Top Filter Bar Overlay
+            VStack {
+                VStack(spacing: 6) {
+                    // Search bar
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.slateGray)
+                            .font(.caption)
+                        TextField("Search locations, stashes, shops...", text: $viewModel.pinSearchText)
+                            .font(.caption)
+                            .foregroundColor(.white)
+                        if !viewModel.pinSearchText.isEmpty {
+                            Button(action: { viewModel.pinSearchText = "" }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.slateGray)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                    .padding(8)
+                    .background(Color.darkCard.opacity(0.9))
+                    .cornerRadius(8)
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.cardBorder, lineWidth: 1))
+                    .padding(.horizontal)
+                    
+                    // Category pills
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            ForEach(PinType.allCases) { type in
+                                Button(action: {
+                                    viewModel.selectedPinType = type
+                                    Haptics.playImpact(.light)
+                                }) {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: type.iconName)
+                                            .font(.system(size: 9))
+                                        Text(type.rawValue)
+                                            .font(.system(size: 10, weight: .bold))
+                                    }
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 5)
+                                    .background(viewModel.selectedPinType == type ? Color(hex: type.colorHex) : Color.darkCard.opacity(0.85))
+                                    .foregroundColor(viewModel.selectedPinType == type ? .black : .white)
+                                    .cornerRadius(12)
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
                 }
+                .padding(.top, 8)
+                
+                Spacer()
             }
             
-            // Map Controls
+            // Map Zoom Controls Overlay
             VStack {
+                Spacer()
                 HStack {
                     Spacer()
-                    VStack(spacing: 10) {
-                        MapControlButton(systemName: "plus") { scale *= 1.2 }
-                        MapControlButton(systemName: "minus") { scale /= 1.2 }
-                        MapControlButton(systemName: "scope") { 
+                    VStack(spacing: 8) {
+                        MapControlButton(systemName: "plus") {
+                            withAnimation { scale = min(3.0, scale * 1.25) }
+                        }
+                        MapControlButton(systemName: "minus") {
+                            withAnimation { scale = max(0.6, scale / 1.25) }
+                        }
+                        MapControlButton(systemName: "scope") {
                             withAnimation {
                                 scale = 1.0
-                                offset = .zero
+                                offset = CGSize(width: -200, height: -200)
+                                lastOffset = offset
+                                lastScale = 1.0
                             }
                         }
                     }
                     .padding()
                 }
-                Spacer()
+                .padding(.bottom, selectedPin != nil ? 180 : 10)
+            }
+            
+            // Selected Pin Bottom Card
+            if let pin = selectedPin {
+                VStack {
+                    Spacer()
+                    PinDetailCard(pin: pin, isSelected: $selectedPin)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .padding()
+                }
             }
         }
         .navigationTitle("Leonida Map")
@@ -90,35 +155,26 @@ struct MapView: View {
     }
 }
 
-
-struct PinView: View {
+struct PinMarkerView: View {
     let pin: MapPin
+    let isSelected: Bool
     
     var body: some View {
         VStack(spacing: 0) {
-            Image(systemName: iconName)
-                .font(.system(size: 20, weight: .bold))
-                .foregroundColor(pin.isCompleted ? .neonPink : .neonPink)
-                .padding(8)
-                .background(Color.deepPurple)
+            Image(systemName: pin.type.iconName)
+                .font(.system(size: isSelected ? 22 : 16, weight: .bold))
+                .foregroundColor(pin.isCompleted ? .black : Color(hex: pin.type.colorHex))
+                .padding(isSelected ? 10 : 7)
+                .background(pin.isCompleted ? Color.viceGreen : Color.darkCard)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(pin.isCompleted ? Color.neonPink : Color.neonPink, lineWidth: 2))
+                .overlay(Circle().stroke(Color(hex: pin.type.colorHex), lineWidth: isSelected ? 3 : 2))
+                .shadow(color: Color(hex: pin.type.colorHex).opacity(0.6), radius: isSelected ? 8 : 4)
             
             Image(systemName: "triangle.fill")
-                .font(.system(size: 10))
-                .foregroundColor(pin.isCompleted ? .neonPink : .neonPink)
+                .font(.system(size: 8))
+                .foregroundColor(Color(hex: pin.type.colorHex))
                 .rotationEffect(.degrees(180))
-                .offset(y: -4)
-        }
-    }
-    
-    private var iconName: String {
-        switch pin.type {
-        case .safehouse: return "house.fill"
-        case .weapon: return "scope"
-        case .collectible: return "star.fill"
-        case .activity: return "flag.fill"
-        case .secret: return "questionmark.circle.fill"
+                .offset(y: -3)
         }
     }
 }
@@ -128,34 +184,74 @@ struct PinDetailCard: View {
     @Binding var isSelected: MapPin?
     @EnvironmentObject var viewModel: GTA6ViewModel
     
+    var currentPin: MapPin {
+        viewModel.mapPins.first(where: { $0.id == pin.id }) ?? pin
+    }
+    
     var body: some View {
         CustomCard {
-            HStack {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(pin.type.rawValue.uppercased())
-                        .font(.caption2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.neonPink)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(currentPin.type.rawValue.uppercased())
+                            .font(.system(size: 9, weight: .black))
+                            .foregroundColor(Color(hex: currentPin.type.colorHex))
+                        
+                        Text(currentPin.title)
+                            .font(.headline)
+                            .fontWeight(.black)
+                            .foregroundColor(.white)
+                        
+                        Text(currentPin.subtitle)
+                            .font(.caption2)
+                            .foregroundColor(.slateGray)
+                    }
                     
-                    Text(pin.title)
-                        .font(.headline)
-                        .foregroundColor(.white)
+                    Spacer()
                     
-                    Button(action: { 
-                        viewModel.togglePinCompletion(for: pin)
+                    Button(action: {
+                        withAnimation { isSelected = nil }
                     }) {
-                        Label(pin.isCompleted ? "Completed" : "Mark as Done", systemImage: pin.isCompleted ? "checkmark.circle.fill" : "circle")
-                            .font(.caption)
-                            .foregroundColor(pin.isCompleted ? .neonPink : .white)
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.slateGray)
+                            .font(.title3)
                     }
                 }
                 
-                Spacer()
+                Text(currentPin.description)
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.85))
+                    .lineSpacing(2)
                 
-                Button(action: { isSelected = nil }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.slateGray)
-                        .font(.title2)
+                if let reward = currentPin.reward {
+                    HStack(spacing: 4) {
+                        Image(systemName: "gift.fill")
+                            .font(.caption2)
+                            .foregroundColor(.viceGold)
+                        Text("Reward: \(reward)")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.viceGold)
+                    }
+                    .padding(.vertical, 2)
+                }
+                
+                Divider().background(Color.cardBorder)
+                
+                Button(action: {
+                    viewModel.togglePinCompletion(for: currentPin)
+                }) {
+                    HStack {
+                        Image(systemName: currentPin.isCompleted ? "checkmark.circle.fill" : "circle")
+                        Text(currentPin.isCompleted ? "VISITED / COMPLETED" : "MARK AS VISITED")
+                    }
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(currentPin.isCompleted ? .black : .white)
+                    .frame(maxWidth: .infinity)
+                    .padding(10)
+                    .background(currentPin.isCompleted ? Color.viceGreen : Color.neonPink)
+                    .cornerRadius(8)
                 }
             }
         }
@@ -169,12 +265,12 @@ struct MapControlButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.title3)
+                .font(.subheadline)
                 .foregroundColor(.white)
-                .padding(12)
-                .background(Color.deepPurple.opacity(0.8))
+                .padding(10)
+                .background(Color.darkCard.opacity(0.9))
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color.neonPink, lineWidth: 1))
+                .overlay(Circle().stroke(Color.cardBorder, lineWidth: 1))
         }
     }
 }

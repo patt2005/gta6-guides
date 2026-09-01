@@ -1,0 +1,38 @@
+Notes for App Review (Version 1.1.0)
+Guideline 4.2.2 - Minimum Functionality Resolution
+
+Overview
+GTA6Guide is a rich, feature-packed native iOS & iPadOS tactical companion app for Grand Theft Auto VI (GTA 6). It provides extensive native interactive tools, calculators, rich step-by-step walkthrough checklists, cheat code visualizers with haptic copying, vehicle comparators, ballistics simulators, and lore trivia games.
+
+App Architecture & Native Interactive Features:
+
+1. Interactive Tactical Tools & Simulators (Tools Tab & Home Shortcuts):
+   - Heist Payout & Crew Cut Calculator: Interactive simulation tool where players calculate dynamic take amounts ($250k - $20M), choose tactical approaches, customize percentage cuts across crew roles (Lucia, Jason, Hacker, Driver, Gunman, Fencing fees), and calculate real-time net take splits.
+   - Vehicle Garage & Side-by-Side Benchmark: Interactive vehicle comparison utility allowing side-by-side performance benchmarking (Top Speed, Acceleration, Braking, Handling, Armor, Price) with animated visual telemetry gauges.
+   - Weapon Arsenal & Ballistics TTK Simulator: Interactive ballistics simulator calculating shots-to-kill and time-to-kill (TTK) across variable target distances (5m-100m) and body target zones (Headshot, Torso, Limbs).
+   - 100% Leonida Completion Tracker: Interactive multi-category checklist (Story Missions, Strangers, Hobbies, Random Events, Collectibles) with radial progress indicators and local persistence.
+   - Vice City Lore Trivia Quiz Game: Fully interactive timed multiple-choice quiz with scoring system, haptic feedback, answer explanations, and high-score persistence.
+
+2. Rich Guides System with Interactive Walkthrough Checklists (Guides Tab):
+   - Comprehensive multi-category guides with curated image headers, difficulty badges (Beginner to Master), estimated reading times, and reward tags.
+   - Interactive Walkthrough Checklists: Users can check off each step as they play through missions, with progress bars updating in real time.
+   - In-App Player Mission Notes / Scratchpad: Persistent personal notes stored locally via UserDefaults for each guide.
+   - Native ShareLink integration and bookmarking.
+
+3. Cheat Codes Vault with Controller Visualizers (Cheats Tab):
+   - Full support for PS5, Xbox Series X|S, PC, and In-Game Phone inputs.
+   - Stylized visual controller button sequence badges (△, ○, ✕, □, bumpers, triggers, D-Pad arrows).
+   - 1-Tap Copy with native UIImpactFeedbackGenerator / UINotificationFeedbackGenerator haptic feedback.
+   - Dedicated Cheat Code Detail View with trophy/achievement warning notices, usage tips, and effect breakdowns.
+
+4. Interactive Map of Leonida (Map Tab):
+   - Custom pan-and-zoom map with 30+ categorized points of interest (Safehouses, Ammu-Nation, Mod Shops, Stunt Jumps, Collectibles, Secrets).
+   - Instant search and category filter bar overlay.
+   - Interactive pin cards with coordinates, descriptions, rewards, and completion toggles.
+
+5. iPad & iPhone Native Optimization:
+   - Full adaptive layout with adaptive grid layouts supporting iPad Air 11-inch (M3), iPad Pro, iPad mini, and all iPhone screen sizes.
+
+Testing Notes:
+- Fully functional offline. No login, sign-in, or backend account required.
+- All features and calculators are instantly available upon launch.

@@ -8,62 +8,154 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 25) {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 22) {
+                    // Release Countdown Hub
                     countdownSection
+                        .padding(.horizontal)
+                        .padding(.top)
                     
+                    // Daily Trivia Challenge Teaser
+                    dailyTriviaTeaser
+                        .padding(.horizontal)
+                    
+                    // Latest News Carousel
                     newsSection
                     
+                    // Daily Pro Tip
+                    dailyTipSection
+                        .padding(.horizontal)
+                    
+                    // Overall Progress Tracker
                     quickStatsSection
+                        .padding(.horizontal)
+                        .padding(.bottom)
                 }
-                .padding()
+                .padding(.bottom, 20)
             }
             .background(Color.viceBackground.ignoresSafeArea())
+            .navigationTitle("Vice City Hub")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("GTA 6 GUIDES")
+                        .font(.headline)
+                        .fontWeight(.black)
+                        .foregroundColor(.white)
+                        .tracking(2)
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(destination: MoreView()) {
+                        Image(systemName: "ellipsis.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 22, height: 22)
+                    }
+                }
+            }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    // MARK: - Countdown Section
+    
     private var countdownSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("RELEASE HUB")
-                    .font(.system(size: 10, weight: .bold))
+                Text("LAUNCH COUNTDOWN")
+                    .font(.system(size: 9, weight: .bold))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color.white.opacity(0.2))
-                    .cornerRadius(12)
+                    .background(Color.neonPink.opacity(0.8))
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                
                 Spacer()
+                
+                Text("Rockstar Games")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.8))
             }
             
-            Text("Countdown to launch")
-                .font(.title2.bold())
+            Text("Target Release Window")
+                .font(.title2)
+                .fontWeight(.black)
+                .foregroundColor(.white)
             
-            Text("Verified 2026-06-10 - Rockstar Games")
+            Text("Verified: Fall 2026 • Leonida State")
                 .font(.caption)
-                .opacity(0.8)
+                .foregroundColor(.slateGray)
             
             CountdownTimerView(targetDate: releaseDate)
         }
         .padding()
-        .foregroundColor(.white)
         .background(
             ZStack {
                 Image("banner")
                     .resizable()
                     .scaledToFill()
-                Color.black.opacity(0.6)
+                Color.black.opacity(0.65)
             }
         )
-        .cornerRadius(20)
+        .cornerRadius(18)
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(LinearGradient(colors: [.neonPink, .viceCyan], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1)
+        )
     }
     
+    // MARK: - Daily Trivia
+    
+    private var dailyTriviaTeaser: some View {
+        NavigationLink(destination: TriviaQuizView()) {
+            CustomCard {
+                HStack(spacing: 14) {
+                    Image(systemName: "brain.head.profile")
+                        .font(.system(size: 30))
+                        .foregroundColor(.viceGold)
+                        .padding(10)
+                        .background(Color.viceGold.opacity(0.15))
+                        .clipShape(Circle())
+                    
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("DAILY VICE CITY TRIVIA")
+                            .font(.system(size: 9, weight: .black))
+                            .foregroundColor(.viceGold)
+                        
+                        Text("Test Your Game Lore")
+                            .font(.headline)
+                            .fontWeight(.black)
+                            .foregroundColor(.white)
+                        
+                        Text("Score points, beat the clock, and set high scores.")
+                            .font(.caption2)
+                            .foregroundColor(.slateGray)
+                    }
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.slateGray)
+                }
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    // MARK: - News Section
+    
     private var newsSection: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Text("LATEST NEWS")
-                .font(.headline)
-                .foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 12) {
+            Text("LATEST NEWS & ANALYSIS")
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundColor(.slateGray)
+                .tracking(1.2)
+                .padding(.horizontal)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     ForEach(viewModel.newsItems) { item in
                         NavigationLink(destination: NewsDetailView(item: item)) {
                             NewsCard(item: item)
@@ -71,31 +163,74 @@ struct HomeView: View {
                         .buttonStyle(PlainButtonStyle())
                     }
                 }
+                .padding(.vertical, 1)
+                .padding(.horizontal)
             }
         }
     }
     
+    // MARK: - Daily Tip
+    
+    private var dailyTipSection: some View {
+        CustomCard {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "lightbulb.fill")
+                    .font(.title3)
+                    .foregroundColor(.viceCyan)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("PRO TIP OF THE DAY")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundColor(.viceCyan)
+                    
+                    Text("Vehicle Respray in Police Pursuit")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                    
+                    Text("Entering a Pay 'n' Spray while out of direct police line-of-sight immediately drops your wanted level to 0 stars and gives your vehicle fresh paint and new license plates.")
+                        .font(.caption)
+                        .foregroundColor(.slateGray)
+                        .lineSpacing(2)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Progress Stats
+    
     private var quickStatsSection: some View {
         CustomCard {
             VStack(alignment: .leading, spacing: 10) {
-                Text("TOTAL COMPLETION")
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                
-                ProgressBar(progress: viewModel.overallProgress)
-                
                 HStack {
-                    Text("\(Int(viewModel.overallProgress * 100))%")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.neonPink)
+                    Text("TOTAL PROGRESSION")
+                        .font(.caption2)
+                        .fontWeight(.black)
+                        .foregroundColor(.white)
                     
                     Spacer()
                     
-                    Text("Leonida State")
-                        .font(.caption)
+                    Text("\(Int(viewModel.overallProgress * 100))%")
+                        .font(.headline)
+                        .fontWeight(.black)
+                        .foregroundColor(.neonPink)
+                }
+                
+                ProgressBar(progress: viewModel.overallProgress, height: 8)
+                
+                HStack {
+                    Text("Leonida Guides & Map Exploration")
+                        .font(.caption2)
                         .foregroundColor(.slateGray)
+                    
+                    Spacer()
+                    
+                    NavigationLink(destination: CompletionTrackerView()) {
+                        Text("View 100% Checklist →")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.viceCyan)
+                    }
                 }
             }
         }
@@ -108,7 +243,7 @@ struct CountdownTimerView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 8) {
             timeUnit(value: days, label: "DAYS")
             timeUnit(value: hours, label: "HRS")
             timeUnit(value: minutes, label: "MIN")
@@ -123,19 +258,19 @@ struct CountdownTimerView: View {
     }
     
     private func timeUnit(value: Int, label: String) -> some View {
-        VStack {
-            Text(String(format: "%02d", value))
-                .font(.system(size: 24, weight: .bold, design: .monospaced))
+        VStack(spacing: 2) {
+            Text(String(format: "%02d", max(0, value)))
+                .font(.system(size: 22, weight: .black, design: .monospaced))
                 .foregroundColor(.white)
             Text(label)
-                .font(.system(size: 10, weight: .bold))
-                .foregroundColor(.white.opacity(0.7))
+                .font(.system(size: 9, weight: .black))
+                .foregroundColor(.viceCyan)
         }
-        .frame(height: 60)
+        .frame(height: 54)
         .frame(maxWidth: .infinity)
-        .background(Color.white.opacity(0.1))
+        .background(Color.darkCard.opacity(0.8))
         .cornerRadius(10)
-        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.white.opacity(0.2), lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.cardBorder, lineWidth: 1))
     }
     
     private var days: Int { Int(max(0, timeRemaining) / 86400) }
@@ -148,29 +283,38 @@ struct NewsCard: View {
     let item: NewsItem
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
+            RemoteImageView(urlString: item.imageUrl, fallbackSystemName: "newspaper.fill")
+                .frame(height: 90)
+                .cornerRadius(8)
+            
+            Text(item.category.uppercased())
+                .font(.system(size: 8, weight: .bold))
+                .foregroundColor(.neonPink)
+            
             Text(item.title)
-                .font(.headline)
+                .font(.caption)
+                .fontWeight(.bold)
                 .foregroundColor(.white)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
             
-            Text(item.summary)
-                .font(.caption)
-                .foregroundColor(.slateGray)
-                .lineLimit(3)
-                .multilineTextAlignment(.leading)
-            
             Spacer()
             
-            Text("READ MORE")
-                .font(.caption2)
-                .fontWeight(.bold)
-                .foregroundColor(.neonPink)
+            HStack {
+                Label("\(item.readTimeMinutes) min", systemImage: "clock")
+                    .font(.system(size: 9))
+                    .foregroundColor(.slateGray)
+                Spacer()
+                Text("Read →")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(.viceCyan)
+            }
         }
-        .padding()
-        .frame(width: 250, height: 150)
-        .background(Color.deepPurple.opacity(0.5))
+        .padding(10)
+        .frame(width: 210, height: 210)
+        .background(Color.darkCard)
         .cornerRadius(12)
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.cardBorder, lineWidth: 1))
     }
 }
