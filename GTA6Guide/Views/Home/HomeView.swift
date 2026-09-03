@@ -38,7 +38,7 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("GTA 6 GUIDES")
+                    Text("Game Guides VI")
                         .font(.headline)
                         .fontWeight(.black)
                         .foregroundColor(.white)
